@@ -15,10 +15,18 @@ data_transforms = {
         transforms.Resize((224, 224)),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
+        transforms.Normalize(
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]
+        ),
     ]),
     'val': transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
+        transforms.Normalize(
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]
+        ),
     ]),
 }
 
@@ -31,7 +39,15 @@ val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
 
 # 使用预训练 ResNet18
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = models.resnet18(pretrained=True)
+print(f"使用设备: {device}")
+
+# 检查GPU信息
+if torch.cuda.is_available():
+    print(f"GPU数量: {torch.cuda.device_count()}")
+    print(f"当前GPU: {torch.cuda.get_device_name(0)}")
+    print(f"GPU内存: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.1f} GB")
+
+model = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
 model.fc = nn.Linear(model.fc.in_features, 3)  # 3 类
 model = model.to(device)
 
