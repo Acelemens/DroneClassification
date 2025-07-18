@@ -92,7 +92,7 @@ def evaluate_model(model_name, model_path):
 
 # ============ 主逻辑 ============ #
 results = []
-for name, filename in tqdm(model_files.items(), desc="6评估模型中"):
+for name, filename in tqdm(model_files.items(), desc="评估模型中"):
     model_path = os.path.join(model_dir, filename)
     if not os.path.exists(model_path):
         print(f"模型文件不存在: {model_path}")
